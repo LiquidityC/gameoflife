@@ -17,6 +17,7 @@ void CellContainer::init(unsigned int width, unsigned int height)
 		for (size_t j = 0; j < mWidth; j++) {
 			Cell cell(j*2, i*2);
 			cell.setVisible(rand() % 2 == 1);
+			//cell.setVisible(true);
 			row.push_back(cell);
 		}
 		cell_matrix.push_back(row);
@@ -40,6 +41,12 @@ void CellContainer::repopulate()
 					c->setVisible(true);
 				}
 			}
+		}
+	}
+
+	for (size_t i = 0; i < cell_matrix.size(); i++) {
+		for (size_t j = 0; j < cell_matrix[i].size(); j++) {
+			cell_matrix[i][j].update();
 		}
 	}
 }
