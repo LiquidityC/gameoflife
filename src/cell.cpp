@@ -4,8 +4,9 @@
 
 void Cell::render(SDL_Surface* surface) const
 {
+	Uint32 color = SDL_MapRGB(surface->format, 0xFF, 0xFF, 0xFF);
 	if (!visible) {
-		return;
+		color = SDL_MapRGB(surface->format, 0x00, 0x00, 0x00);
 	}
 
 	SDL_Rect rect;
@@ -14,5 +15,5 @@ void Cell::render(SDL_Surface* surface) const
 	rect.w = size;
 	rect.h = size;
 
-	SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, 0xFF, 0xFF, 0xFF));
+	SDL_FillRect(surface, &rect, color);
 }

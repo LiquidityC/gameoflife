@@ -16,11 +16,33 @@ void CellContainer::init(unsigned int width, unsigned int height)
 		std::vector<Cell> row;
 		for (size_t j = 0; j < mWidth; j++) {
 			Cell cell(j*2, i*2);
-			cell.setVisible(rand() % 2 == 1);
-			//cell.setVisible(true);
 			row.push_back(cell);
 		}
 		cell_matrix.push_back(row);
+	}
+
+	randomize();
+}
+
+void CellContainer::randomize()
+{
+	for (size_t i = 0; i < cell_matrix.size(); i++) {
+		for (size_t j = 0; j < cell_matrix[i].size(); j++) {
+			cell_matrix[i][j].setVisible(rand() % 2 == 1);
+			cell_matrix[i][j].update();
+		}
+	}
+}
+
+void CellContainer::invert()
+{
+	Cell* c;
+	for (size_t i = 0; i < cell_matrix.size(); i++) {
+		for (size_t j = 0; j < cell_matrix[i].size(); j++) {
+			c = &(cell_matrix[i][j]);
+			c->setVisible(!c->isVisible());
+			c->update();
+		}
 	}
 }
 

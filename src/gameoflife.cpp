@@ -35,22 +35,30 @@ int main( int argc, char* args[] )
 		while (SDL_PollEvent (&e) != 0) {
 			if (e.type == SDL_QUIT) {
 				quit = true;
-			}
-			if (e.type == SDL_MOUSEMOTION) {
+			} else if (e.type == SDL_MOUSEMOTION) {
 				int x, y;
 
 				x = e.motion.x;
 				y = e.motion.y;
 
 				cellContainer.mouseMotion(x, y);
+			} else if (e.type == SDL_KEYDOWN) {
+				switch (e.key.keysym.sym) {
+					case SDLK_RETURN:
+						cellContainer.randomize();
+						break;
+					case SDLK_BACKSPACE:
+						cellContainer.invert();
+						break;
+					default:
+						break;
+				}
 			}
 		}
 
 		// Move stuff
 		cellContainer.repopulate();
 
-		//Fill the surface black 
-		SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0x000000, 0x000000, 0x000000 ) ); 
 		cellContainer.render(screenSurface);
 
 		SDL_UpdateWindowSurface( window );

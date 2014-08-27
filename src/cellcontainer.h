@@ -19,6 +19,10 @@ class CellContainer : public Renderable
 
 		void repopulate();
 
+		void randomize();
+
+		void invert();
+
 		void mouseMotion(int x, int y);
 
 		virtual void render(SDL_Surface*) const;
