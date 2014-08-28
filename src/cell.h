@@ -11,6 +11,7 @@ class Cell : public Renderable
 		const unsigned int size = 2;
 		bool visible = false;
 		bool visible_next_iteration = false;
+		bool unchanged = false;
 		unsigned int xpos, ypos;
 
 	public:
@@ -21,7 +22,7 @@ class Cell : public Renderable
 
 		void setVisible(bool b) { visible_next_iteration = b; };
 
-		void update() { visible = visible_next_iteration; };
+		void update();
 
 		virtual void render(SDL_Surface*) const;
 };
