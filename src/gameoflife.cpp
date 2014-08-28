@@ -2,9 +2,12 @@
 #include <SDL2/SDL.h>
 
 #include "cellcontainer.h"
+#include "timer.h"
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH 				= 640;
+const int SCREEN_HEIGHT 			= 480;
+const int SCREEN_FPS 				= 20;
+const int SCREEN_TICKS_PER_FRAME 	= 1000 / SCREEN_FPS;
 
 int main( int argc, char* args[] )
 {
@@ -26,11 +29,16 @@ int main( int argc, char* args[] )
 
 	bool quit = false;
 	SDL_Event e;
+
 	CellContainer cellContainer;
 	cellContainer.init(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	Timer fpsCapTimer;
+
 	// Main loop
 	while (!quit) {
+
+		fpsCapTimer.start();
 		
 		while (SDL_PollEvent (&e) != 0) {
 			if (e.type == SDL_QUIT) {
@@ -63,7 +71,11 @@ int main( int argc, char* args[] )
 
 		SDL_UpdateWindowSurface( window );
 
-		SDL_Delay ( 100 );
+		// Cap the frame rate
+		int frameTicks = fpsCapTimer.getTicks();
+		if (frameTicks < SCREEN_TICKS_PER_FRAME) {
+			SDL_Delay( SCREEN_TICKS_PER_FRAME - frameTicks );
+		}
 	}
 
 	SDL_DestroyWindow( window );
