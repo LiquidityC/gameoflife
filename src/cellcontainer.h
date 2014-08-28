@@ -13,6 +13,10 @@ class CellContainer : public Renderable
 
 		unsigned int countNeighborsFor(unsigned int, unsigned int);
 
+		bool coordinatesExist(int, int);
+
+		unsigned int asMatrixCoordinate(int);
+
 	public:
 
 		void init(unsigned int, unsigned int);
@@ -24,6 +28,8 @@ class CellContainer : public Renderable
 		void invert();
 
 		void mouseMotion(int x, int y);
+
+		void addGlider(int x, int y);
 
 		virtual void render(SDL_Surface*) const;
 };

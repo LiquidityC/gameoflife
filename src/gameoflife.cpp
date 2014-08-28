@@ -4,8 +4,8 @@
 #include "cellcontainer.h"
 #include "timer.h"
 
-const int SCREEN_WIDTH 				= 640;
-const int SCREEN_HEIGHT 			= 480;
+const int SCREEN_WIDTH 				= 800;
+const int SCREEN_HEIGHT 			= 600;
 const int SCREEN_FPS 				= 20;
 const int SCREEN_TICKS_PER_FRAME 	= 1000 / SCREEN_FPS;
 
@@ -25,6 +25,7 @@ int main( int argc, char* args[] )
 		return -1;
 	}
 
+	SDL_ShowCursor(0);
 	screenSurface = SDL_GetWindowSurface( window );
 
 	bool quit = false;
@@ -50,6 +51,8 @@ int main( int argc, char* args[] )
 				y = e.motion.y;
 
 				cellContainer.mouseMotion(x, y);
+			} else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
+				cellContainer.addGlider(e.button.x, e.button.y);
 			} else if (e.type == SDL_KEYDOWN) {
 				switch (e.key.keysym.sym) {
 					case SDLK_RETURN:

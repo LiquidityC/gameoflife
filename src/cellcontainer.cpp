@@ -81,21 +81,19 @@ unsigned int CellContainer::countNeighborsFor(unsigned int x, unsigned int y)
 	for (int i = -1; i < 2; i++) {
 		for (int j = -1; j < 2; j++) {
 
-			if (i == 0 || j == 0) {
+			if (i == 0 && j == 0) {
 				continue;
 			}
-			dx = x + i;
-			dy = y + j;
+			dx = x + j;
+			dy = y + i;
 
-			if (dx < 0 || dy < 0) {
-				continue;
-			}
-
-			if (dy >= static_cast<int>(cell_matrix.size()) || dx >= static_cast<int>(cell_matrix[dy].size())) {
+			if (!coordinatesExist(dx, dy)) {
 				continue;
 			}
 
-			count += cell_matrix[dy][dx].isVisible() ? 1 : 0;
+			if (cell_matrix[dy][dx].isVisible()) {
+				++count;
+			}
 		}
 	}
 
@@ -113,18 +111,63 @@ void CellContainer::render(SDL_Surface* surface) const
 
 void CellContainer::mouseMotion(int x, int y)
 {
-	int xpos = (x - (x % 2)) / 2;
-	int ypos = (y - (y % 2)) / 2;
+	unsigned int xpos = asMatrixCoordinate(x);
+	unsigned int ypos = asMatrixCoordinate(y);
 
-	if (ypos+5 >= static_cast<int>(cell_matrix.size())) {
-		return;
-	}
-	if (xpos+5 >= static_cast<int>(cell_matrix[ypos].size())) {
+	if (!coordinatesExist(xpos, ypos)) {
 		return;
 	}
 
-	for (unsigned int i = 0; i < 6; i++) {
-		cell_matrix[ypos+i][xpos].setVisible(true);
-		cell_matrix[ypos][xpos+i].setVisible(true);
+	cell_matrix[ypos][xpos].setVisible(true);
+}
+
+bool CellContainer::coordinatesExist(int x, int y)
+{
+	if (y < 1 || y > static_cast<int>(cell_matrix.size())) {
+		return false;
+	}
+	if (x < 1 || x > static_cast<int>(cell_matrix[y].size())) {
+		return false;
+	}
+	return true;
+}
+
+unsigned int CellContainer::asMatrixCoordinate(int coord)
+{
+	return static_cast<unsigned int>((coord - (coord % 2)) / 2);
+}
+
+void CellContainer::addGlider(int x, int y)
+{
+	unsigned int xpos = asMatrixCoordinate(x) + 3;
+	unsigned int ypos = asMatrixCoordinate(y) + 3;
+
+	if (!coordinatesExist(xpos, ypos) || !coordinatesExist(xpos+2, ypos+2)) {
+		return;
+	}
+
+	// Clear the glider area
+	for (unsigned int i = 0; i < 3; i++) {
+		for (unsigned int j = 0; j < 3; j++) {
+			cell_matrix[ypos+i][xpos+j].setVisible(false);
+		}
+	}
+
+	// Top row
+	cell_matrix[ypos][xpos+1].setVisible(true);
+
+	// Middle row
+	cell_matrix[ypos+1][xpos+2].setVisible(true);
+
+	// Bottom row
+	cell_matrix[ypos+2][xpos].setVisible(true);
+	cell_matrix[ypos+2][xpos+1].setVisible(true);
+	cell_matrix[ypos+2][xpos+2].setVisible(true);
+
+	// Update the glider area
+	for (unsigned int i = 0; i < 3; i++) {
+		for (unsigned int j = 0; j < 3; j++) {
+			cell_matrix[ypos+i][xpos+j].update();
+		}
 	}
 }
